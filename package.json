@@ -1,0 +1,179 @@
+{
+  "name": "vscode-mcp-server-extension",
+  "displayName": "MCP Server Extension",
+  "description": "VSCode extension that hosts an integrated Model Context Protocol (MCP) server",
+  "version": "0.1.0",
+  "publisher": "zarafa",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other",
+    "Extension Packs"
+  ],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "ai",
+    "claude",
+    "anthropic",
+    "server"
+  ],
+  "activationEvents": [
+    "onCommand:mcpServer.start",
+    "onCommand:mcpServer.stop",
+    "onCommand:mcpServer.status",
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "mcpServer.start",
+        "title": "Start MCP Server",
+        "category": "MCP"
+      },
+      {
+        "command": "mcpServer.stop",
+        "title": "Stop MCP Server",
+        "category": "MCP"
+      },
+      {
+        "command": "mcpServer.restart",
+        "title": "Restart MCP Server", 
+        "category": "MCP"
+      },
+      {
+        "command": "mcpServer.status",
+        "title": "Show MCP Server Status",
+        "category": "MCP"
+      },
+      {
+        "command": "mcpServer.openConfig",
+        "title": "Open MCP Configuration",
+        "category": "MCP"
+      },
+      {
+        "command": "mcpServer.showLogs",
+        "title": "Show MCP Server Logs",
+        "category": "MCP"
+      }
+    ],
+    "configuration": {
+      "title": "MCP Server Configuration",
+      "properties": {
+        "mcpServer.autoStart": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically start MCP server when VSCode starts"
+        },
+        "mcpServer.port": {
+          "type": "number",
+          "default": 3001,
+          "description": "Port for the MCP server"
+        },
+        "mcpServer.host": {
+          "type": "string",
+          "default": "localhost",
+          "description": "Host for the MCP server"
+        },
+        "mcpServer.logLevel": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warn",
+            "info",
+            "debug"
+          ],
+          "default": "info",
+          "description": "Log level for MCP server"
+        },
+        "mcpServer.maxConnections": {
+          "type": "number",
+          "default": 10,
+          "description": "Maximum number of concurrent MCP connections"
+        },
+        "mcpServer.enableCORS": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable CORS for MCP server"
+        }
+      }
+    },
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "mcpServer.start"
+        },
+        {
+          "command": "mcpServer.stop"
+        },
+        {
+          "command": "mcpServer.restart"
+        },
+        {
+          "command": "mcpServer.status"
+        },
+        {
+          "command": "mcpServer.openConfig"
+        },
+        {
+          "command": "mcpServer.showLogs"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "mcpServer.start",
+          "when": "view == mcpServerView",
+          "group": "navigation"
+        }
+      ]
+    },
+    "views": {
+      "explorer": [
+        {
+          "id": "mcpServerView",
+          "name": "MCP Server",
+          "when": "mcpServer.enabled"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "mcp-server-container",
+          "title": "MCP Server",
+          "icon": "$(server-environment)"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package",
+    "build": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "@types/node": "18.x",
+    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/parser": "^6.4.1",
+    "eslint": "^8.47.0",
+    "typescript": "^5.1.6",
+    "@vscode/test-electron": "^2.3.4",
+    "@vscode/vsce": "^2.15.0"
+  },
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.4.0",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "ws": "^8.14.2",
+    "uuid": "^9.0.1"
+  }
+}
